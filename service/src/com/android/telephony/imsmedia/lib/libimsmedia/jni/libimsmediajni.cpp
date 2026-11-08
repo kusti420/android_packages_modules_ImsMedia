@@ -202,12 +202,6 @@ static void JNIImsMediaService_setLogMode(JNIEnv*, jobject, jint logMode, jint d
     ImsMediaTrace::IMSetDebugLogMode(debugLogMode);
 }
 
-static void JNIImsMediaService_seTestMode(JNIEnv*, jobject, jint testMode)
-{
-    // TODO Implement test mode
-    ALOGD("[SetTestMode] TestMode[%d]", testMode);
-}
-
 static JNINativeMethod gMethods[] = {
         {"getInterface", "(I)J", (void*)JNIImsMediaService_getInterface},
         {"sendMessage", "(JI[B)V", (void*)JNIImsMediaService_sendMessage},
@@ -218,7 +212,9 @@ static JNINativeMethod gMethods[] = {
         {"generateSprop", "([B)Ljava/lang/String;", (void*)JNIImsMediaUtil_generateSPROP},
         {"setAssetManager", "(Landroid/content/res/AssetManager;)V", (void*)SetAssetManager},
         {"setLogMode", "(II)V", (void*)JNIImsMediaService_setLogMode},
-        {"setTestMode", "(I)V", (void*)JNIImsMediaService_seTestMode},
+        // No "setTestMode": JNIImsMediaService.java declares no such native (the Test mode API
+        // only exists in ImsMediaController and does nothing), and RegisterNatives() failing on
+        // it aborted ImsMediaService in JNI_OnLoad, so no media session could ever open.
 };
 
 jint ImsMediaServiceJni_OnLoad(JavaVM* vm, JNIEnv* env)
